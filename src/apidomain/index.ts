@@ -4,7 +4,7 @@ const API_DOMAIN = (() => {
   // Read from environment variable first (Vite uses import.meta.env)
   // Fallback to localhost:3001 which is a common NestJS dev port
   const fromEnv = typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_BASE_URL;
-  return fromEnv || 'http://localhost:3001/api';
+  return fromEnv || 'http://localhost:3000/api/v1';
 })();
 
 export default API_DOMAIN;
