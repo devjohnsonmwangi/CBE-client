@@ -10,10 +10,12 @@
     "lint": "eslint",
     "format": "prettier",
     "check": "prettier --write . && eslint --fix"
+  ,"codegen": "node ./scripts/generate-route-tree.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/react-devtools": "^0.7.0",
+    "@tanstack/react-query": "^5.0.0",
     "@tanstack/react-router": "^1.132.0",
     "@tanstack/react-router-devtools": "^1.132.0",
     "@tanstack/router-plugin": "^1.132.0",
@@ -24,6 +26,7 @@
   },
   "devDependencies": {
     "@tanstack/eslint-config": "^0.3.0",
+    "@tanstack/react-query-devtools": "^5.0.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
     "@types/node": "^22.10.2",
