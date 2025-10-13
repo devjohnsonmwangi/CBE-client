@@ -12,6 +12,7 @@ export const listDocuments = (params?: Record<string, any>) => {
   const q = params ? `?${new URLSearchParams(params).toString()}` : '';
   return http<DocumentModel[]>(`documents${q}`);
 };
+//test
 
 export const getDocument = (id: string) => http<DocumentModel>(`documents/${id}`);
 export const createDocument = (payload: any) => http<DocumentModel>('documents', { method: 'POST', body: JSON.stringify(payload) });
