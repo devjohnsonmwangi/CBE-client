@@ -12,10 +12,9 @@ export default defineConfig({
     viteReact(),
     tailwindcss(),
   ],
-  test: {
-    globals: true,
-    environment: 'jsdom',
-  },
+  // 'test' is a vite-plugin-vitest option. Some vite types in this project don't include it;
+  // cast to any to avoid type errors until @types/vitest or an updated Vite is installed.
+  ...( { test: { globals: true, environment: 'jsdom' } } as any ),
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),

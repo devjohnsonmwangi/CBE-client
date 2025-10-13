@@ -1,7 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import logo from '../logo.svg'
 
-export const Route = createFileRoute('/')({
+// Using createFileRoute without path argument to match the installed @tanstack/react-router typings.
+// Cast to any to work around a typing mismatch between local @tanstack/react-router and generated types.
+export const Route = (createFileRoute as any)({
   component: App,
 })
 
