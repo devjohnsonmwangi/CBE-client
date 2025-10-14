@@ -9,8 +9,8 @@
     "test": "vitest run",
     "lint": "eslint",
     "format": "prettier",
-    "check": "prettier --write . && eslint --fix"
-  ,"codegen": "node ./scripts/generate-route-tree.mjs"
+    "check": "prettier --write . && eslint --fix",
+    "codegen": "node ./scripts/generate-route-tree.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.6",
@@ -22,7 +22,8 @@
     "lucide-react": "^0.545.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "tailwindcss": "^4.0.6"
+    "tailwindcss": "^4.0.6",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@tanstack/eslint-config": "^0.3.0",
