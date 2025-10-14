@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '../../store/store'
-import { useNavigate } from 'react-router-dom';
 
 
 const SunIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
@@ -57,7 +56,6 @@ const LogoutIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" })
 const Logout: React.FC = () => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const clearAuth = useAuthStore((s) => s.clearAuth)
-  const navigate = useNavigate();
 
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -98,7 +96,7 @@ const Logout: React.FC = () => {
     } finally {
       clearAuth()
       try { localStorage.removeItem('token'); localStorage.removeItem('user') } catch (e) {}
-      setTimeout(() => { setIsLoggingOut(false); navigate('/login') }, 800)
+      setTimeout(() => { setIsLoggingOut(false); window.location.href = '/login' }, 800)
     }
   };
 
@@ -204,7 +202,7 @@ const Logout: React.FC = () => {
                 Changed your mind? <span role="img" aria-label="thinking emoji">🤔</span>
               </p>
               <button
-                onClick={() => navigate(-1)}
+                onClick={() => window.history.back()}
                 className="
                   text-sky-600 hover:text-sky-700
                   dark:text-purple-400 dark:hover:text-purple-300

@@ -1,9 +1,8 @@
-import { useState, useMemo } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import React, { useState, useMemo } from "react";
 import { useAuthStore } from '../../store/store';
 import { useLogin } from '../../hooks/useLogin'
+import type { SchoolRoleEnum } from '../../types'
 import { AtSign, Lock, LogIn, Eye, EyeOff } from "lucide-react";
-import { twMerge } from 'tailwind-merge';
 
 // --- IMPORTS ---
 import authImage from "../../assets/imageses/loginimageatmwalimu.png";
@@ -12,7 +11,9 @@ import authImage from "../../assets/imageses/loginimageatmwalimu.png";
 
 const Login = () => {
   const setAuth = useAuthStore((s) => s.setAuth)
-  const navigate = useNavigate();
+  const currentToken = useAuthStore((s) => s.token)
+  const currentUser = useAuthStore((s) => s.user)
+  // Using window.location for navigation to avoid router typing surface here
   const loginMutation = useLogin()
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -38,8 +39,33 @@ const Login = () => {
       const res = await loginMutation.mutateAsync({ email, password } as any)
       if (res?.access_token) {
         setAuth(res as { access_token: string; user: any })
+        // Derive primary role from backend payload (supports both string and { role } shapes)
+        const user = (res as any).user
+        const roles: string[] = Array.isArray(user?.roles)
+          ? user.roles.map((r: any) => (typeof r === 'string' ? r : r.role))
+          : []
+
+        const primaryRole: SchoolRoleEnum | null = (roles && roles.length > 0 ? (roles[0] as SchoolRoleEnum) : null)
+
+        // Map backend roles to application landing pages. Update as needed.
+        const roleTargetMap: Record<string, string> = {
+          super_admin: '/admin',
+          school_admin: '/school',
+          dos: '/dos',
+          teacher: '/teacher/dashboard',
+          student: '/student/dashboard',
+          parent: '/parent/dashboard',
+          accountant: '/finance',
+          librarian: '/library',
+          kitchen_staff: '/kitchen',
+          groundsman: '/grounds',
+          support_staff: '/support',
+          board_member: '/board',
+        }
+
+        const target = primaryRole ? (roleTargetMap[primaryRole] ?? '/dashboard') : '/dashboard'
         // small delay for better UX
-        setTimeout(() => navigate('/dashboard'), 400)
+        setTimeout(() => { window.location.href = target }, 400)
       } else {
         setErrorMsg('Invalid response from server')
       }
@@ -51,22 +77,54 @@ const Login = () => {
     }
   }
 
-  const isLoading = isMutationLoading || isSubmitting;
-  const mergeClasses = (...classes: string[]) => twMerge(classes.filter(Boolean).join(' '));
+  const isLoading = isSubmitting || (loginMutation as any).isLoading || (loginMutation as any).status === 'loading';
+  const mergeClasses = (...classes: string[]) => classes.filter(Boolean).join(' ');
+
+  // If the user is already authenticated, redirect based on role to prevent duplicate logins.
+  React.useEffect(() => {
+    try {
+      const roles: string[] = Array.isArray(currentUser?.roles)
+        ? currentUser.roles.map((r: any) => (typeof r === 'string' ? r : r.role))
+        : []
+      const primaryRole: string | null = roles && roles.length > 0 ? roles[0] : null
+
+      const roleTargetMap: Record<string, string> = {
+        super_admin: '/admin',
+        school_admin: '/school',
+        dos: '/dos',
+        teacher: '/teacher/dashboard',
+        student: '/student/dashboard',
+        parent: '/parent/dashboard',
+        accountant: '/finance',
+        librarian: '/library',
+        kitchen_staff: '/kitchen',
+        groundsman: '/grounds',
+        support_staff: '/support',
+        board_member: '/board',
+      }
+
+      if (currentToken && primaryRole) {
+        const target = roleTargetMap[primaryRole] ?? '/dashboard'
+        window.setTimeout(() => { window.location.href = target }, 50)
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, [currentToken, currentUser])
 
   // Use local asset directly
 
   return (
     // --- JSX (UNCHANGED) ---
     <div className="min-h-screen flex flex-col lg:flex-row">
-      <Toaster position="top-right" richColors />
+  {/* Toast system removed in favor of inline feedback */}
       <nav className="bg-white shadow-md w-full fixed top-0 left-0 z-10">
         <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <Link to="/" className="flex items-center space-x-2">
+          <a href="/" className="flex items-center space-x-2">
             <span className="self-center text-2xl font-bold text-blue-700 whitespace-nowrap">@mwalimu</span>
-          </Link>
+          </a>
           <div className="hidden lg:flex space-x-6">
-            <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</Link>
+            <a href="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</a>
           </div>
         </div>
       </nav>
@@ -97,9 +155,7 @@ const Login = () => {
                   placeholder="your.email@example.com"
                   className={mergeClasses(
                     "w-full pl-10 pr-12 py-3 bg-gray-50 border rounded-lg focus:ring-2 transition-all duration-300",
-                    errors.email
-                      ? "border-red-500 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-blue-500"
+                    "border-gray-300 focus:ring-blue-500"
                   )}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -117,9 +173,7 @@ const Login = () => {
                   placeholder="Your Secure Password"
                   className={mergeClasses(
                     "w-full pl-10 pr-12 py-3 bg-gray-50 border rounded-lg focus:ring-2 transition-all duration-300",
-                    errors.password
-                      ? "border-red-500 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-blue-500"
+                    "border-gray-300 focus:ring-blue-500"
                   )}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -131,16 +185,12 @@ const Login = () => {
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
-                {errors.password && (
-                  <p className="text-red-500 text-xs mt-1 absolute left-0 right-0 text-center lg:text-left">
-                    {errors.password?.message}
-                  </p>
-                )}
+                {/* show field-level errors via errorMsg for simplicity */}
               </div>
               <div className="text-right -mt-2">
-                <Link to="/forgot-password" className="text-sm font-medium text-blue-600 hover:underline">
+                <a href="/forgot-password" className="text-sm font-medium text-blue-600 hover:underline">
                   Forgot password?
-                </Link>
+                </a>
               </div>
               <button
                 type="submit"
@@ -165,9 +215,7 @@ const Login = () => {
               <div className="text-center pt-2">
                 <p className="text-sm text-gray-600">
                   Don't have an account?{' '}
-                  <Link to="/register" className="font-bold text-blue-600 hover:underline">
-                    Register Now
-                  </Link>
+                  <a href="/register" className="font-bold text-blue-600 hover:underline">Register Now</a>
                 </p>
               </div>
             </form>
