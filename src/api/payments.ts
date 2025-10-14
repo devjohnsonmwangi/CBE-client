@@ -1,5 +1,5 @@
 import { http } from './http'
-import type { CreatePaymentDto } from '../types/payments'
+import type { CreatePaymentDto } from '../types'
 
 export const createPayment = (payload: CreatePaymentDto) => http('payments', { method: 'POST', body: JSON.stringify(payload) })
 export const listPayments = () => http('payments')

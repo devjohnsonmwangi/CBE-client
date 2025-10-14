@@ -1,4 +1,4 @@
-import type { CreateSchoolDto, UpdateSchoolDto } from '../types/schools'
+import type { CreateSchoolDto, UpdateSchoolDto } from '../types'
 import { http } from './http';
 
 export interface School {

@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import * as quizzesApi from '../api/quizzes'
-import type { CreateQuizDto, CreateQuestionDto, SubmitAnswersDto } from '../types/quizzes'
+import type { CreateQuizDto, CreateQuestionDto, SubmitAnswersDto } from '../types'
 
 export function useQuiz(id: string | number) {
   return useQuery({ queryKey: ['quiz', id], queryFn: () => quizzesApi.getQuiz(id) })

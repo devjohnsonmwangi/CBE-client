@@ -1,5 +1,5 @@
 import { http } from './http'
-import type { CreateInvoiceDto, UpdateInvoiceDto } from '../types/invoices'
+import type { CreateInvoiceDto, UpdateInvoiceDto } from '../types'
 
 export const listInvoices = () => http('invoices')
 export const getInvoice = (id: string | number) => http(`invoices/${id}`)

@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import * as schoolsApi from '../api/schools'
-import type { CreateSchoolDto, UpdateSchoolDto } from '../types/schools'
+import type { CreateSchoolDto, UpdateSchoolDto } from '../types'
 
 export function useSchools() {
   return useQuery({ queryKey: ['schools'], queryFn: () => schoolsApi.listSchools() })

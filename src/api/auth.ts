@@ -1,5 +1,5 @@
 import { http } from './http';
-import type { LoginDto } from '../types/backend.d';
+import type { LoginDto } from '../types';
 
 export type LoginPayload = LoginDto;
 export type LoginResponse = { access_token: string; user: any };

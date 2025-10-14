@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import * as feeApi from '../api/feeStructures'
-import type { CreateFeeStructureDto, UpdateFeeStructureDto } from '../types/feeStructures'
+import type { CreateFeeStructureDto, UpdateFeeStructureDto } from '../types'
 
 export function useFeeStructures() {
   return useQuery({ queryKey: ['feeStructures'], queryFn: () => feeApi.listFeeStructures() })

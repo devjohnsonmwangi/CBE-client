@@ -1,5 +1,5 @@
 import { http } from './http'
-import type { CreateQuizDto, CreateQuestionDto, SubmitAnswersDto } from '../types/quizzes'
+import type { CreateQuizDto, CreateQuestionDto, SubmitAnswersDto } from '../types'
 
 export const createQuiz = (payload: CreateQuizDto) => http('quizzes', { method: 'POST', body: JSON.stringify(payload) })
 

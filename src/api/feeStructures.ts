@@ -1,4 +1,4 @@
-import type { CreateFeeStructureDto, UpdateFeeStructureDto } from '../types/feeStructures'
+import type { CreateFeeStructureDto, UpdateFeeStructureDto } from '../types'
 import { http } from './http'
 
 export const listFeeStructures = () => http(`/fee-structures`)
