@@ -24,7 +24,7 @@ const loginSchema = z.object({
 })
 
 // Validation schema for forgot password
-//just checking simultenous push  to  git 
+//just checking simultenous push  to  git  just  checking simultenous push  to  git 
 const forgotPasswordSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
 })
