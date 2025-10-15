@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import authImage from '../../assets/imageses/registerimageatmwalimu.png'
+import authImage from '../../../public/images/loginimageatmwalimu.png'
 import { useRegister } from '../../hooks/useRegister'
 
 const Register: React.FC = () => {

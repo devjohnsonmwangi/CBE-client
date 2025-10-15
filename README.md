@@ -1,113 +1,262 @@
-Welcome to your new TanStack app! 
+# CBC School Management System API
 
-# Getting Started
+## 1. Introduction
 
-To run this application:
+The Competency-Based Curriculum (CBC) School Management System is a comprehensive platform designed to manage all aspects of school operations. This README provides designers with an overview of the system's features, modules, and user roles to guide the creation of an intuitive and effective frontend interface.
 
-```bash
-npm install
-npm run start
-```
+## 2. System Overview
 
-# Building For Production
+This API serves as the backend for a full-featured school management system that supports:
 
-To build this application for production:
+- Multiple schools/institutions (multi-tenant architecture)
+- Comprehensive user role management
+- Academic operations (curriculum, assessments, timetables)
+- Administrative functions (finance, attendance, discipline)
+- Communication tools (chat, notifications, announcements)
+- Learning management system (courses, assignments, quizzes)
 
-```bash
-npm run build
-```
+## 3. Core Modules
 
-## Testing
-# CBE-client (Frontend)
+### 3.1 User Management & Authentication
 
-This is the frontend application for the CBE school management system. It's built with React + Vite and uses TanStack Router and TanStack Query for routing and data fetching. The UI is lightweight and designed to consume the NestJS backend in `../school-app-api`.
+- **Features**: Registration, login, profile management, role-based access control
+- **Authentication Methods**: JWT tokens, Google OAuth integration
+- **User Types**: Students, teachers, administrators, parents, support staff
+- **Roles System**: Users can have multiple roles (e.g., a user can be both a parent and a teacher)
 
-## Quick start
+### 3.2 School Administration
 
-From the `CBE-client` folder:
+- **School Setup**: Registration, configuration, branding
+- **Departments**: Academic and administrative department management
+- **Positions**: Staff positions and hierarchy
+- **Academic Structure**: Years, terms, classes, subjects
 
-```powershell
-pnpm install
-pnpm dev
-```
+### 3.3 Academic Management
 
-The dev server runs with Vite and opens at http://localhost:5173 by default.
+- **Curriculum**: Subject management, lesson planning
+- **Classes & Enrollment**: Class creation, student enrollment
+- **Assessments**: Grades, reports, CBC competency tracking
+- **Timetabling**: Automated and manual schedule generation
 
-## Available scripts
+### 3.4 Learning Management System (LMS)
 
-Common scripts in `package.json` (run from the `CBE-client` folder):
+- **Courses**: Online course creation and management
+- **Course Modules**: Structured learning units
+- **Lesson Contents**: Text, video, and interactive materials
+- **Assignments & Quizzes**: Online submission and auto-grading
 
-- `pnpm dev` - Start the Vite dev server
-- `pnpm build` - Build production assets
-- `pnpm preview` - Preview the production build locally
-- `pnpm tsc` or `pnpm -s tsc --noEmit` - Run TypeScript check
-- `pnpm lint` - Run ESLint
-- `pnpm test` - Run tests (Vitest)
-- `pnpm codegen` - (project) generate route tree / other codegen tasks
+### 3.5 Financial Management
 
-Check `package.json` for the exact script names in this repo.
+- **Fee Structures**: Grade-level fee configuration
+- **Invoicing**: Automated term-based billing
+- **Payments**: Online and offline payment tracking
+- **Reports**: Financial statements and analysis
 
-## Environment / API base
+### 3.6 Communication
 
-The frontend expects the backend API to be available. By default the HTTP wrapper reads the base URL from `src/api/http.ts` where you can point the client to your backend (for example `http://localhost:3000` for local development).
+- **Chat System**: Real-time messaging with encryption
+- **Announcements**: School-wide and targeted announcements
+- **Notifications**: System alerts and reminders
+- **Events & Calendar**: School events management
 
-If you need to override the API host in development, set the environment variable in a `.env` file. Example:
+### 3.7 Additional Systems
 
-```properties
-VITE_API_BASE_URL=http://localhost:3000
-```
+- **Discipline Management**: Incident tracking and resolution
+- **Attendance Tracking**: Student and staff attendance
+- **Document Management**: Storage and sharing of important files
+- **Support Ticketing**: Technical support request management
 
-Vite exposes `import.meta.env.VITE_API_BASE_URL` to the app.
+## 4. User Roles & Permissions
 
-## TypeScript notes (deprecation / baseUrl)
+### 4.1 Primary Roles
 
-This project uses TypeScript with `baseUrl` and a `paths` mapping for `@/*` -> `src/*`. TypeScript 7 will eventually remove `baseUrl`. The TypeScript language server may show a deprecation diagnostic that suggests adding `"ignoreDeprecations": "6.0"` to `tsconfig.json` (this is a TS 6+ feature). Options to resolve the diagnostic:
+- **super_admin**: Platform-level administrator (manages multiple schools)
+- **school_admin**: School-level administrator
+- **dos**: Director of Studies (academic administration)
+- **teacher**: Classroom instructors
+- **student**: Learners enrolled in the system
+- **parent**: Guardians linked to students
+- **accountant**: Financial management staff
+- **librarian**: Library management
+- **kitchen_staff**: Cafeteria/meals management
+- **groundsman**: Facilities management
+- **support_staff**: General administrative support
+- **board_member**: School governance
 
-- Upgrade TypeScript to 6.x and set `"ignoreDeprecations": "6.0"` in `tsconfig.json` (recommended, minimal code changes). This may reveal new type-check errors that you'll need to fix.
-- Or remove `baseUrl` and replace `@/*` imports with relative imports or adjust your build tooling (more invasive).
+### 4.2 Role-Based Access Control
 
-At present the project keeps `baseUrl` and the `@/*` alias for convenience. If you'd like, I can upgrade the client to TS 6 and apply the recommended `ignoreDeprecations` setting — tell me and I will update `package.json` and run checks.
+- Granular permissions based on role combinations
+- Resource-level access restrictions (e.g., school_admin can only access their own school data)
+- Feature-based permissions (e.g., only accountants can generate invoices)
 
-## Routing
-
-Routes are file-based in `src/routes`. The codegen script (`pnpm codegen`) will scan `src/routes` and produce a `src/routeTree.gen.ts` helper used by the router. If you add or remove files under `src/routes`, run the codegen script to update the route tree.
-
-Root route: `src/routes/__root.tsx` contains the application layout and shared providers.
-
-## Data fetching
-
-This app uses a central HTTP wrapper at `src/api/http.ts` and per-resource API modules under `src/api/*`. TanStack Query (React Query) hooks live in `src/hooks/*` and call the API wrappers.
-
-Prefer using the provided hooks (in `src/hooks`) instead of calling `fetch` directly so caching, invalidation, and auth handling follow the app conventions.
-
-## Codegen and DTO types
-
-To keep frontend DTOs in sync with the NestJS backend, the repository includes generated TypeScript types under `src/types/` that are derived from backend DTOs. If you change backend DTOs you should re-run the generation workflow (or let me update the generator to automate this).
-
-## Contributing
-
-- Use feature branches and open PRs against `main`.
-- Keep changes small and add tests where appropriate (Vitest).
-- Update `src/types` when backend DTO shapes change and run `pnpm -s tsc --noEmit` before opening a PR.
-
-## Troubleshooting
-
-- If imports fail (module not found for `@/...`) make sure your editor is using the workspace TypeScript version installed by the repo (VS Code: Command Palette → "TypeScript: Select TypeScript Version" → "Use Workspace Version").
-- If you see TypeScript deprecation diagnostics about `baseUrl`, either upgrade TypeScript to 6.x or ignore the warning temporarily (see TypeScript notes above).
-
-## Useful files
-
-- `src/api/http.ts` — central HTTP client and base URL
-- `src/api/*` — per-resource API wrappers (CRUD functions)
-- `src/hooks/*` — TanStack Query hooks used by UI components
-- `src/types/*` — generated frontend DTO types and enums
-- `scripts/generate-route-tree.mjs` — route-tree generator
-
-If you want, I can:
-- upgrade TypeScript and add the recommended `ignoreDeprecations` entry,
-- or remove `baseUrl` and convert imports to be relative (I recommend the TS upgrade path).
+## 5. Key Frontend Interfaces
 
 ---
 
-If you'd like the README adjusted further (add screenshots, specific developer workflow, or CI commands), tell me what you'd like included and I will update it.
+## 4. Detailed Schema Reference
 
+### 6.1 Responsive Design
+
+- The application must work seamlessly on:
+  - Desktop computers (administrative staff)
+  - Tablets (teachers during class)
+  - Mobile phones (students and parents)
+
+### 6.2 Accessibility
+
+- Color contrast ratios for readability
+- Screen reader compatibility
+- Keyboard navigation support
+- Text size adjustments
+
+### 6.3 Data Visualization
+
+- Academic performance charts
+- Financial reports and graphs
+- Attendance statistics
+- System usage analytics
+
+### 6.4 Design System Components
+
+- Form elements (consistent inputs, dropdowns, date pickers)
+- Navigation patterns (sidebar, breadcrumbs, tabs)
+- Data tables with sorting, filtering, pagination
+- Cards for displaying entity information
+- Modal dialogs for quick actions
+- Alert and notification styles
+
+## 7. Integration Points
+
+### 7.1 API Integration
+
+- RESTful API endpoints available for all functionality
+- WebSocket connection for real-time features (chat, notifications)
+- JWT authentication headers required for protected routes
+- OAuth flow for Google authentication
+
+### 7.2 Third-Party Services
+
+- Google OAuth for authentication
+- Email service integration
+- Payment gateway integration (M-Pesa, Stripe)
+- Cloud storage for documents and media
+
+## 8. Design Priorities
+
+1. **Intuitive Navigation**: Clear pathways for different user roles
+2. **Simplified Workflows**: Multi-step processes broken down into manageable segments
+3. **Data Visualization**: Clear presentation of complex academic and financial data
+4. **Mobile Accessibility**: Core functions available on all devices
+5. **Consistent Experience**: Unified design language across all modules
+
+## 9. Getting Started for Designers
+
+1. Begin with user flows for the authentication process
+2. Focus on the core dashboards for each primary user role
+3. Develop the main academic interfaces (classes, subjects, assessments)
+4. Design the communication tools (chat, announcements)
+5. Create financial management screens
+
+## 10. API Documentation
+
+The API is built using NestJS and follows RESTful principles. You can access the complete API documentation at `/docs` when running the server. This Swagger-based documentation includes all endpoints, request/response schemas, and authentication requirements.
+
+Key API routes include:
+
+- `POST /api/v1/auth/register`: User registration
+- `POST /api/v1/auth/login`: User authentication
+- `GET /api/v1/auth/profile`: Get authenticated user profile
+- `GET /api/v1/schools`: List available schools
+- `GET /api/v1/classes`: List classes (filtered by school)
+- `POST /api/v1/assessments`: Create new assessment records
+
+## 11. Contact & Support
+
+For technical questions related to the API functionality, please contact:
+
+- Lead Developer: Eng Johnson Mwangi
+- Project Management: JOMULTD Team
+- Email: jomulimited2@gmail.com
+
+---
+
+This README provides a comprehensive overview of the CBC School Management System API to guide the design of an effective and user-friendly frontend. The design should focus on creating intuitive workflows that match the sophisticated functionality of the backend system while maintaining accessibility and responsiveness across different devices.
+
+#### `meetingTable`, `meetingAgendaItemTable`, `meetingMinutesTable`, `actionItemTable`
+
+- **Purpose:** Provides a full-featured system for managing formal meetings.
+- **Functionality:** From scheduling and setting an agenda to recording minutes and assigning trackable action items with due dates. This creates an auditable record of all decisions.
+
+#### `consentRequestTable` & `consentResponseTable`
+
+- **Purpose:** Digitizes the process of obtaining parental consent for events like school trips.
+- **Functionality:** Admins create a request, which sends notifications to relevant parents. Parents can approve or deny directly in the app. Admins get a real-time dashboard of responses.
+
+### 4.4. Security & Auditing
+
+#### `auditLogTable`
+
+- **Purpose:** The system's immutable ledger. Provides a non-repudiable record of all significant actions.
+- **Key Columns:** `user_id` (who), `action` (what), `table_name` & `record_pk` (on what), `old_data` & `new_data` (the change), `ip_address` (where), `created_at` (when).
+- **Usage:** This table should be written to by application-level middleware/triggers after every critical CUD operation.
+
+#### `userSessionTable`
+
+- **Purpose:** Manages active user login sessions.
+- **Functionality:** Allows a user (or admin) to see all devices where they are currently logged in and provides the ability to remotely log out a specific session.
+
+#### `apiKeyTable`
+
+- **Purpose:** For secure, programmatic access to our API (e.g., for future mobile apps or third-party integrations).
+- **Security:** We only store a hash of the API key, not the key itself.
+
+#### `passwordHistoryTable`
+
+- **Purpose:** Prevents users from reusing their recent passwords, increasing account security.
+
+---
+
+### 5.1 Authentication Screens
+
+- Login (Email/Password)
+- Google OAuth Login
+- Registration
+- Password Reset
+- Two-Factor Authentication
+
+### 5.2 Dashboards
+
+- **Admin Dashboard**: School performance metrics, alerts, quick actions
+- **Teacher Dashboard**: Classes, assignments, attendance, upcoming events
+- **Student Dashboard**: Timetable, assignments due, grades, announcements
+- **Parent Dashboard**: Children's performance, fees, communication
+
+### 5.3 Academic Interfaces
+
+- **Class Management**: Class lists, student performance, attendance
+- **Subject Planning**: Curriculum mapping, resource allocation
+- **Assessment Entry**: Grade input, competency tracking, report generation
+- **Timetable View**: Weekly schedule with filters (teacher, class, venue)
+
+### 5.4 LMS Interfaces
+
+- **Course Creator**: Structured content development tools
+- **Student Learning Portal**: Access to courses, materials, assignments
+- **Assignment Submission**: File upload, online text entry, feedback
+- **Quiz System**: Question creation, attempt tracking, results
+
+### 5.5 Financial Interfaces
+
+- **Fee Configuration**: Grade-level fee structure setup
+- **Invoice Management**: Generation, tracking, reporting
+- **Payment Processing**: Record payments, generate receipts
+- **Financial Dashboard**: Income tracking, outstanding balances, projections
+
+### 5.6 Communication Tools
+
+- **Chat Interface**: One-on-one and group messaging
+- **Announcement System**: Create, target, and track announcements
+- **Notification Center**: All system alerts in one place
+- **Calendar & Events**: Visual calendar with event details
+
+## 6. Technical Considerations for Design
