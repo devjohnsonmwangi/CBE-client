@@ -15,7 +15,7 @@ import { authStore } from '../../store/AuthStore'
 import { useState, useEffect } from 'react'
 
 // --- IMPORTS ---
-import authImage from 'loginimageatmwalimu.png'
+import authImage from '../../../public/images/loginimageatmwalimu.png'
 
 // Validation schema for login
 const loginSchema = z.object({
