@@ -191,7 +191,7 @@ const Pricing: React.FC<PricingProps> = ({
               </ul>
               <Link
                 to={plan.buttonLink}
-                className={`mt-8 block w-full rounded-md px-3 py-2 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
+                className={`mt-8 block w-full rounded-md px-3 py-2 text-center text-sm font-semibold leading-6 focus-visible:outline-2 focus-visible:outline-offset-2
                   ${
                     plan.highlighted
                       ? 'bg-white text-blue-600 hover:bg-slate-50 focus-visible:outline-white'
