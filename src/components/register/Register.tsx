@@ -61,6 +61,7 @@ const Register = () => {
     },
     onSubmit: async ({ value }) => {
       try {
+        // Extract the registration payload (exclude confirmPassword and terms)
         const { confirmPassword, terms, ...registrationData } = value
 
         // Submit the registration

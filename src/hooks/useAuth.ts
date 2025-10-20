@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
 import { logout as apiLogout, refreshWithCookie } from '../api/auth'
-import { useAuthStore } from '../store/store'
+import { authActions } from '../store/AuthStore'
 
 export function useLogout() {
-  const clearAuth = useAuthStore((s) => s.clearAuth)
+  const clearAuth = authActions.deleteUser
   return useMutation({
     mutationFn: async () => {
       try {
@@ -16,7 +16,25 @@ export function useLogout() {
 }
 
 export function useRefresh() {
-  const setAuth = useAuthStore((s) => s.setAuth)
+  // Helper maps backend refresh response to the app's globalDataType
+  const setAuth = (loginRes: { access_token: string; user: any }) => {
+    const payload = {
+      isVerified: true,
+      tokens: {
+        accessToken: loginRes.access_token,
+        refreshToken: '', // refresh token is stored in httpOnly cookie
+      },
+      user: {
+        email: loginRes.user?.email || '',
+        username: loginRes.user?.username || loginRes.user?.name || '',
+        id: String(loginRes.user?.id || ''),
+        role: loginRes.user?.role || undefined,
+      },
+    }
+
+    // Use the centralized action to save user into the store and localStorage
+    authActions.saveUser(payload as any)
+  }
   return useMutation({
     mutationFn: async () => {
       const res = await refreshWithCookie()
