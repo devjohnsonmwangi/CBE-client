@@ -14,6 +14,7 @@ import { Route as StudentsRouteImport } from './routes/students'
 import { Route as FinanceRouteImport } from './routes/finance'
 import { Route as CoursesRouteImport } from './routes/courses'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardLmsRouteImport } from './routes/dashboard/lms'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 
@@ -42,6 +43,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardLmsRoute = DashboardLmsRouteImport.update({
+  id: '/dashboard/lms',
+  path: '/dashboard/lms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/auth/register',
   path: '/auth/register',
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/teachers': typeof TeachersRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/dashboard/lms': typeof DashboardLmsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/teachers': typeof TeachersRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/dashboard/lms': typeof DashboardLmsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/teachers': typeof TeachersRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/dashboard/lms': typeof DashboardLmsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
     | '/teachers'
     | '/auth/login'
     | '/auth/register'
+    | '/dashboard/lms'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/teachers'
     | '/auth/login'
     | '/auth/register'
+    | '/dashboard/lms'
   id:
     | '__root__'
     | '/'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/teachers'
     | '/auth/login'
     | '/auth/register'
+    | '/dashboard/lms'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +131,7 @@ export interface RootRouteChildren {
   TeachersRoute: typeof TeachersRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
+  DashboardLmsRoute: typeof DashboardLmsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -158,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/lms': {
+      id: '/dashboard/lms'
+      path: '/dashboard/lms'
+      fullPath: '/dashboard/lms'
+      preLoaderRoute: typeof DashboardLmsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/register': {
       id: '/auth/register'
       path: '/auth/register'
@@ -183,6 +203,7 @@ const rootRouteChildren: RootRouteChildren = {
   TeachersRoute: TeachersRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
+  DashboardLmsRoute: DashboardLmsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

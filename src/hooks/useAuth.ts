@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
 import { logout as apiLogout, refreshWithCookie } from '../api/auth'
-import { useAuthStore } from '../store/store'
+import { authStore } from '../store/AuthStore'
 
 export function useLogout() {
-  const clearAuth = useAuthStore((s) => s.clearAuth)
+  const clearAuth = authStore((s) => s.clearAuth)
   return useMutation({
     mutationFn: async () => {
       try {
