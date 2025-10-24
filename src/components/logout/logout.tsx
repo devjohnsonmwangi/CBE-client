@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuthStore } from '../../store/store'
+import { authActions } from '../../store/AuthStore'
 
 
 const SunIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
@@ -55,7 +55,7 @@ const LogoutIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" })
 
 const Logout: React.FC = () => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const clearAuth = useAuthStore((s) => s.clearAuth)
+  const clearAuth = authActions.deleteUser
 
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
