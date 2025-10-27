@@ -16,6 +16,7 @@ import { Route as CoursesRouteImport } from './routes/courses'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TeacherIndexRouteImport } from './routes/teacher/index'
 import { Route as TeacherClassesRouteImport } from './routes/teacher/classes'
+import { Route as DashboardLmsRouteImport } from './routes/dashboard/lms'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthGoogleSuccessRouteImport } from './routes/auth/google-success'
@@ -56,6 +57,11 @@ const TeacherClassesRoute = TeacherClassesRouteImport.update({
   path: '/teacher/classes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardLmsRoute = DashboardLmsRouteImport.update({
+  id: '/dashboard/lms',
+  path: '/dashboard/lms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/auth/register',
   path: '/auth/register',
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/auth/google-success': typeof AuthGoogleSuccessRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/dashboard/lms': typeof DashboardLmsRoute
   '/teacher/classes': typeof TeacherClassesRoute
   '/teacher': typeof TeacherIndexRoute
   '/teacher/index/placeholder': typeof TeacherIndexPlaceholderRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/auth/google-success': typeof AuthGoogleSuccessRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/dashboard/lms': typeof DashboardLmsRoute
   '/teacher/classes': typeof TeacherClassesRoute
   '/teacher': typeof TeacherIndexRoute
   '/teacher/index/placeholder': typeof TeacherIndexPlaceholderRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/auth/google-success': typeof AuthGoogleSuccessRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/dashboard/lms': typeof DashboardLmsRoute
   '/teacher/classes': typeof TeacherClassesRoute
   '/teacher/': typeof TeacherIndexRoute
   '/teacher/index/placeholder': typeof TeacherIndexPlaceholderRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/auth/google-success'
     | '/auth/login'
     | '/auth/register'
+    | '/dashboard/lms'
     | '/teacher/classes'
     | '/teacher'
     | '/teacher/index/placeholder'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/auth/google-success'
     | '/auth/login'
     | '/auth/register'
+    | '/dashboard/lms'
     | '/teacher/classes'
     | '/teacher'
     | '/teacher/index/placeholder'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/auth/google-success'
     | '/auth/login'
     | '/auth/register'
+    | '/dashboard/lms'
     | '/teacher/classes'
     | '/teacher/'
     | '/teacher/index/placeholder'
@@ -168,6 +180,7 @@ export interface RootRouteChildren {
   AuthGoogleSuccessRoute: typeof AuthGoogleSuccessRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
+  DashboardLmsRoute: typeof DashboardLmsRoute
   TeacherClassesRoute: typeof TeacherClassesRoute
   TeacherIndexRoute: typeof TeacherIndexRoute
   TeacherIndexPlaceholderRoute: typeof TeacherIndexPlaceholderRoute
@@ -224,6 +237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherClassesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/lms': {
+      id: '/dashboard/lms'
+      path: '/dashboard/lms'
+      fullPath: '/dashboard/lms'
+      preLoaderRoute: typeof DashboardLmsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/register': {
       id: '/auth/register'
       path: '/auth/register'
@@ -264,6 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthGoogleSuccessRoute: AuthGoogleSuccessRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
+  DashboardLmsRoute: DashboardLmsRoute,
   TeacherClassesRoute: TeacherClassesRoute,
   TeacherIndexRoute: TeacherIndexRoute,
   TeacherIndexPlaceholderRoute: TeacherIndexPlaceholderRoute,

@@ -3,12 +3,12 @@ import { useForm } from '@tanstack/react-form'
 import { z } from 'zod'
 import { Mail, Lock, Eye, EyeOff, User, Phone, Home } from 'lucide-react'
 import authImage from '../../../public/images/loginimageatmwalimu.png'
-import { useRegister } from '../../hooks/useRegister'
-import { useToast } from '../../hooks/use-toast'
-import { Input } from '../../components/ui/input'
-import { Label } from '../../components/ui/label'
-import { Button } from '../../components/ui/button'
-import { Checkbox } from '../../components/ui/checkbox'
+import { useRegister } from '../hooks/useRegister'
+import { useToast } from '../hooks/use-toast'
+import { Input } from './ui/input'
+import { Label } from './ui/label'
+import { Button } from './ui/button'
+import { Checkbox } from './ui/checkbox'
 
 // Validation schema for registration
 const registerSchema = z
