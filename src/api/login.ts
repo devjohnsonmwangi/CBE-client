@@ -1,6 +1,7 @@
 import { http } from './http'
 import { authActions } from '../store/AuthStore'
 import { globalDataType, UserRole } from '@/types'
+import API_DOMAIN from '../apidomain'
 
 interface LoginResponse {
   success: boolean
@@ -18,17 +19,42 @@ export async function loginWithEmailPassword(
   data: LoginData,
 ): Promise<LoginResponse> {
   try {
-    const response = await http<globalDataType>('auth/login', {
+    // Backend returns { access_token, refresh_token, user }
+    const response = await http<any>('auth/login', {
       method: 'POST',
       body: JSON.stringify(data),
     })
 
     if (response) {
-      authActions.saveUser(response)
-      return { success: true, data: response }
-    } else {
-      return { success: false, message: 'Invalid credentials' }
+      const mapped: globalDataType = {
+        isVerified: true,
+        tokens: {
+          accessToken: response.access_token || response.tokens?.access_token || response.tokens?.accessToken || '',
+          refreshToken: response.refresh_token || response.tokens?.refresh_token || response.tokens?.refreshToken || '',
+        },
+        user: {
+          email: response.user?.email || response.user?.username || '',
+          username: response.user?.username || response.user?.full_name || response.user?.email || '',
+          full_name: response.user?.full_name || response.user?.name || undefined,
+          roles: Array.isArray(response.user?.roles)
+            ? response.user.roles.map((r: any) => r.role)
+            : response.user?.roles || undefined,
+          // backend uses `user_id` for id
+          id: String(response.user?.user_id ?? response.user?.id ?? response.user?._id ?? ''),
+          // primary role: prefer first role in roles array, else fallback to single role field
+          role:
+            (Array.isArray(response.user?.roles) && response.user.roles[0]?.role) ||
+            (response.user?.role as UserRole) ||
+            UserRole.CUSTOMER,
+          profile_picture:
+            response.user?.profile_picture || response.user?.profilePicture || response.user?.photo || null,
+        },
+      }
+
+      authActions.saveUser(mapped)
+      return { success: true, data: mapped }
     }
+    return { success: false, message: 'Invalid credentials' }
   } catch (error: any) {
     return {
       success: false,
@@ -39,24 +65,10 @@ export async function loginWithEmailPassword(
 
 export async function loginWithGoogle(): Promise<LoginResponse> {
   try {
-    // This would typically redirect to Google OAuth
-    // For now, mock the response
-    const mockResponse: globalDataType = {
-      isVerified: true,
-      tokens: {
-        accessToken: 'google-mock-token',
-        refreshToken: 'google-mock-refresh-token',
-      },
-      user: {
-        email: 'google@example.com',
-        username: 'googleUser',
-        id: 'google-123',
-        role: UserRole.CUSTOMER,
-      },
-    }
-
-    authActions.saveGoogleUser(mockResponse)
-    return { success: true, data: mockResponse }
+    // Start OAuth by redirecting the browser to the backend OAuth start endpoint.
+    // The backend will set a refresh cookie and redirect back to /auth/google-success
+    window.location.href = `${API_DOMAIN.replace(/\/$/, '')}/auth/google`
+    return { success: true }
   } catch (error: any) {
     return {
       success: false,

@@ -8,6 +8,7 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import Header from '../components/Header'
 import NotFound from '../components/NotFound'
+import RedirectDebugOverlay from '../components/dev/RedirectDebugOverlay'
 
 import StoreDevtools from '../lib/demo-store-devtools'
 
@@ -53,8 +54,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <Header />
+        <RedirectDebugOverlay />
         {children}
         <TanStackDevtools
           config={{

@@ -20,19 +20,35 @@ async function http<T = any>(path: string, opts: RequestOptions = {}): Promise<T
   const token = opts.token ?? getTokenFromStorage();
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const res = await fetch(url, { ...opts, headers });
+  // Ensure cookies (refresh token) are sent/received for cross-site auth flows
+  const fetchOpts: RequestInit = {
+    credentials: 'include',
+    ...opts,
+    headers,
+  };
+
+  const res = await fetch(url, fetchOpts);
 
   const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
-
-  if (!res.ok) {
-    const error = new Error((data && data.message) || res.statusText);
-    (error as any).status = res.status;
-    (error as any).data = data;
-    throw error;
+  let data: any = null
+  if (text) {
+    try {
+      data = JSON.parse(text)
+    } catch (err) {
+      // Not JSON — keep raw text under data.__raw to aid debugging
+      data = { __raw: text }
+    }
   }
 
-  return data as T;
+  if (!res.ok) {
+    const message = (data && (data.message || data.error)) || res.statusText || data?.__raw || `HTTP ${res.status}`
+    const error: any = new Error(message)
+    error.status = res.status
+    error.data = data
+    throw error
+  }
+
+  return data as T
 }
 
 export { http, getTokenFromStorage };

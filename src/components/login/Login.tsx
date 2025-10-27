@@ -53,16 +53,49 @@ const Login = () => {
 
   // Helper function to redirect based on user role
   const redirectBasedOnRole = (userRole: UserRole) => {
+    // Resolve frontend base explicitly when available to avoid navigating to a
+    // backend origin by accident. Prefer Vite env `VITE_FRONTEND_URL` when set.
+    const frontendBase = (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_FRONTEND_URL) || window.location.origin
+
     // Using window.location for now since we have route type constraints
-    switch (userRole) {
-      case UserRole.SUPER_ADMIN:
-        window.location.href = '/dashboard/admin'
+    // Route users to dashboards based on their role. Map all known backend
+    // roles to their dedicated dashboards. Any unknown role falls back to
+    // the 'staffs' dashboard.
+    const roleStr = String(userRole).toLowerCase()
+    switch (roleStr) {
+      case 'super_admin':
+        window.location.href = `${frontendBase}/dashboard/super-admin`
         break
-      case UserRole.CUSTOMER:
-        window.location.href = '/dashboard/user'
+      case 'school_admin':
+        window.location.href = `${frontendBase}/dashboard/admin`
         break
+      // 'dos' (Director of Studies)
+      case 'dos':
+        window.location.href = `${frontendBase}/dashboard/dos`
+        break
+      case 'teacher':
+        window.location.href = `${frontendBase}/dashboard/teacher`
+        break
+      case 'student':
+        window.location.href = `${frontendBase}/dashboard/student`
+        break
+      case 'parent':
+        window.location.href = `${frontendBase}/dashboard/parent`
+        break
+      // finance / accounting roles
+      case 'accountant':
+        window.location.href = `${frontendBase}/dashboard/accountant`
+        break
+      case 'librarian':
+        window.location.href = `${frontendBase}/dashboard/librarian`
+        break
+      // keep existing mapping for legacy 'customer' role
+      case 'customer':
+        window.location.href = `${frontendBase}/dashboard/user`
+        break
+      // default to staffs dashboard for any other role
       default:
-        window.location.href = '/dashboard'
+        window.location.href = `${frontendBase}/dashboard/staffs`
     }
   }
 
@@ -106,9 +139,59 @@ const Login = () => {
             description: 'Login successful!',
           })
 
-          // Get user role from auth store and redirect accordingly
-          const userRole = authStore.state.user.role
-          redirectBasedOnRole(userRole)
+            // Prefer the role returned by the login response (roles array or single role), fall back to auth store
+            const respUser = (response as any).data?.user
+            let userRole: any = undefined
+            if (respUser) {
+              if (Array.isArray(respUser.roles) && respUser.roles.length > 0) {
+                userRole = respUser.roles[0]?.role || respUser.roles[0]
+              } else if (respUser.role) {
+                userRole = respUser.role
+              }
+            }
+            if (!userRole) userRole = authStore.state.user.role
+            // compute target and emit dev event before redirect
+            try {
+              const frontendBase = (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_FRONTEND_URL) || window.location.origin
+              let target = `${frontendBase}/dashboard/staffs`
+              const roleStr = String(userRole).toLowerCase()
+              switch (roleStr) {
+                case 'super_admin':
+                  target = `${frontendBase}/dashboard/super-admin`
+                  break
+                case 'school_admin':
+                  target = `${frontendBase}/dashboard/admin`
+                  break
+                case 'dos':
+                  target = `${frontendBase}/dashboard/dos`
+                  break
+                case 'teacher':
+                  target = `${frontendBase}/dashboard/teacher`
+                  break
+                case 'student':
+                  target = `${frontendBase}/dashboard/student`
+                  break
+                case 'parent':
+                  target = `${frontendBase}/dashboard/parent`
+                  break
+                case 'accountant':
+                  target = `${frontendBase}/dashboard/accountant`
+                  break
+                case 'librarian':
+                  target = `${frontendBase}/dashboard/librarian`
+                  break
+                case 'customer':
+                  target = `${frontendBase}/dashboard/user`
+                  break
+                default:
+                  target = `${frontendBase}/dashboard/staffs`
+              }
+              window.dispatchEvent(new CustomEvent('dev:redirect', { detail: { frontendBase, target } }))
+              window.location.href = target
+            } catch (err) {
+              // fallback to previous behavior
+              redirectBasedOnRole(userRole as any)
+            }
         }
         // All error toasts are handled in the hook
       } catch (error: any) {
@@ -153,9 +236,10 @@ const Login = () => {
         description: 'Google login successful!',
       })
 
-      // Get user role from auth store and redirect accordingly
-      const userRole = authStore.state.user.role
-      redirectBasedOnRole(userRole)
+  // Get user role from auth store and redirect accordingly (prefer roles array)
+  const storeUser = authStore.state.user
+  const userRole = Array.isArray(storeUser.roles) && storeUser.roles.length > 0 ? storeUser.roles[0] : storeUser.role
+  redirectBasedOnRole(userRole as any)
     } catch (error: any) {
       toast({
         variant: 'destructive',

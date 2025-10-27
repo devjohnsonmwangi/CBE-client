@@ -14,8 +14,12 @@ import { Route as StudentsRouteImport } from './routes/students'
 import { Route as FinanceRouteImport } from './routes/finance'
 import { Route as CoursesRouteImport } from './routes/courses'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TeacherIndexRouteImport } from './routes/teacher/index'
+import { Route as TeacherClassesRouteImport } from './routes/teacher/classes'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AuthGoogleSuccessRouteImport } from './routes/auth/google-success'
+import { Route as TeacherIndexPlaceholderRouteImport } from './routes/teacher/index.placeholder'
 
 const TeachersRoute = TeachersRouteImport.update({
   id: '/teachers',
@@ -42,6 +46,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TeacherIndexRoute = TeacherIndexRouteImport.update({
+  id: '/teacher/',
+  path: '/teacher/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeacherClassesRoute = TeacherClassesRouteImport.update({
+  id: '/teacher/classes',
+  path: '/teacher/classes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/auth/register',
   path: '/auth/register',
@@ -52,6 +66,16 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthGoogleSuccessRoute = AuthGoogleSuccessRouteImport.update({
+  id: '/auth/google-success',
+  path: '/auth/google-success',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeacherIndexPlaceholderRoute = TeacherIndexPlaceholderRouteImport.update({
+  id: '/teacher/index/placeholder',
+  path: '/teacher/index/placeholder',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -59,8 +83,12 @@ export interface FileRoutesByFullPath {
   '/finance': typeof FinanceRoute
   '/students': typeof StudentsRoute
   '/teachers': typeof TeachersRoute
+  '/auth/google-success': typeof AuthGoogleSuccessRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/teacher/classes': typeof TeacherClassesRoute
+  '/teacher': typeof TeacherIndexRoute
+  '/teacher/index/placeholder': typeof TeacherIndexPlaceholderRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -68,8 +96,12 @@ export interface FileRoutesByTo {
   '/finance': typeof FinanceRoute
   '/students': typeof StudentsRoute
   '/teachers': typeof TeachersRoute
+  '/auth/google-success': typeof AuthGoogleSuccessRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/teacher/classes': typeof TeacherClassesRoute
+  '/teacher': typeof TeacherIndexRoute
+  '/teacher/index/placeholder': typeof TeacherIndexPlaceholderRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -78,8 +110,12 @@ export interface FileRoutesById {
   '/finance': typeof FinanceRoute
   '/students': typeof StudentsRoute
   '/teachers': typeof TeachersRoute
+  '/auth/google-success': typeof AuthGoogleSuccessRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/teacher/classes': typeof TeacherClassesRoute
+  '/teacher/': typeof TeacherIndexRoute
+  '/teacher/index/placeholder': typeof TeacherIndexPlaceholderRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -89,8 +125,12 @@ export interface FileRouteTypes {
     | '/finance'
     | '/students'
     | '/teachers'
+    | '/auth/google-success'
     | '/auth/login'
     | '/auth/register'
+    | '/teacher/classes'
+    | '/teacher'
+    | '/teacher/index/placeholder'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -98,8 +138,12 @@ export interface FileRouteTypes {
     | '/finance'
     | '/students'
     | '/teachers'
+    | '/auth/google-success'
     | '/auth/login'
     | '/auth/register'
+    | '/teacher/classes'
+    | '/teacher'
+    | '/teacher/index/placeholder'
   id:
     | '__root__'
     | '/'
@@ -107,8 +151,12 @@ export interface FileRouteTypes {
     | '/finance'
     | '/students'
     | '/teachers'
+    | '/auth/google-success'
     | '/auth/login'
     | '/auth/register'
+    | '/teacher/classes'
+    | '/teacher/'
+    | '/teacher/index/placeholder'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -117,8 +165,12 @@ export interface RootRouteChildren {
   FinanceRoute: typeof FinanceRoute
   StudentsRoute: typeof StudentsRoute
   TeachersRoute: typeof TeachersRoute
+  AuthGoogleSuccessRoute: typeof AuthGoogleSuccessRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
+  TeacherClassesRoute: typeof TeacherClassesRoute
+  TeacherIndexRoute: typeof TeacherIndexRoute
+  TeacherIndexPlaceholderRoute: typeof TeacherIndexPlaceholderRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -158,6 +210,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/teacher/': {
+      id: '/teacher/'
+      path: '/teacher'
+      fullPath: '/teacher'
+      preLoaderRoute: typeof TeacherIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teacher/classes': {
+      id: '/teacher/classes'
+      path: '/teacher/classes'
+      fullPath: '/teacher/classes'
+      preLoaderRoute: typeof TeacherClassesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/register': {
       id: '/auth/register'
       path: '/auth/register'
@@ -172,6 +238,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/google-success': {
+      id: '/auth/google-success'
+      path: '/auth/google-success'
+      fullPath: '/auth/google-success'
+      preLoaderRoute: typeof AuthGoogleSuccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teacher/index/placeholder': {
+      id: '/teacher/index/placeholder'
+      path: '/teacher/index/placeholder'
+      fullPath: '/teacher/index/placeholder'
+      preLoaderRoute: typeof TeacherIndexPlaceholderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -181,8 +261,12 @@ const rootRouteChildren: RootRouteChildren = {
   FinanceRoute: FinanceRoute,
   StudentsRoute: StudentsRoute,
   TeachersRoute: TeachersRoute,
+  AuthGoogleSuccessRoute: AuthGoogleSuccessRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
+  TeacherClassesRoute: TeacherClassesRoute,
+  TeacherIndexRoute: TeacherIndexRoute,
+  TeacherIndexPlaceholderRoute: TeacherIndexPlaceholderRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

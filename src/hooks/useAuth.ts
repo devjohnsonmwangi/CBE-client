@@ -26,9 +26,13 @@ export function useRefresh() {
       },
       user: {
         email: loginRes.user?.email || '',
-        username: loginRes.user?.username || loginRes.user?.name || '',
-        id: String(loginRes.user?.id || ''),
-        role: loginRes.user?.role || undefined,
+        username: loginRes.user?.username || loginRes.user?.full_name || loginRes.user?.name || '',
+        full_name: loginRes.user?.full_name || loginRes.user?.name || undefined,
+  // prefer user_id then id then empty string; avoid mixing ?? and || without parentheses
+  id: String(loginRes.user?.user_id ?? loginRes.user?.id ?? ''),
+        roles: Array.isArray(loginRes.user?.roles) ? loginRes.user.roles.map((r: any) => r.role) : loginRes.user?.roles || undefined,
+        role: (Array.isArray(loginRes.user?.roles) && loginRes.user.roles[0]?.role) || loginRes.user?.role || undefined,
+        profile_picture: loginRes.user?.profile_picture || loginRes.user?.profilePicture || null,
       },
     }
 

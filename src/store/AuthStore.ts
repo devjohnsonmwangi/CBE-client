@@ -1,4 +1,4 @@
-import { UserRole, type globalDataType } from '@/types'
+import { UserRole, type globalDataType } from '../types'
 import { Store } from '@tanstack/store'
 
 const intialState: globalDataType = {
@@ -37,9 +37,12 @@ export const authActions = {
       },
       user: {
         email: data.user.email,
-        username: data.user.username,
+        username: data.user.username || (data.user as any).full_name || '',
+        full_name: (data.user as any).full_name || undefined,
         id: data.user.id,
         role: data.user.role || UserRole.CUSTOMER, // Default to CUSTOMER if role is not provided
+        roles: (data.user as any).roles || undefined,
+        profile_picture: (data.user as any).profile_picture || null,
       },
     }
 
@@ -212,9 +215,12 @@ export const authActions = {
       },
       user: {
         email: data.user.email,
-        username: data.user.username,
+        username: data.user.username || (data.user as any).full_name || '',
+        full_name: (data.user as any).full_name || undefined,
         id: data.user.id,
         role: data.user.role || UserRole.CUSTOMER, // Default to CUSTOMER if role is not provided
+        roles: (data.user as any).roles || undefined,
+        profile_picture: (data.user as any).profile_picture || null,
       },
     })
 

@@ -547,8 +547,14 @@ export enum UserRole {
 export interface User {
   email: string
   username: string
+  // Optional human-friendly full name
+  full_name?: string
   id: string
   role: UserRole
+  // If backend provides multiple roles, include them here
+  roles?: string[]
+  // Optional profile picture URL returned by the backend (google or uploaded)
+  profile_picture?: string | null
 }
 
 export interface Tokens {
